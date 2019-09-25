@@ -1,99 +1,117 @@
-// Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+var $make = $("#make");
+var $model = $("#model");
+var $year = $("#year");
+var $miles = $("#miles");
+var $condition = $("#condition");
+var offer = 0;
 
-// The API object contains methods for each kind of request we'll make
-var API = {
-  saveExample: function(example) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
-    });
-  },
-  getExamples: function() {
-    return $.ajax({
-      url: "api/examples",
-      type: "GET"
-    });
-  },
-  deleteExample: function(id) {
-    return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
-    });
-  }
-};
+$(document).on("submit", "#sellForm", buyCar);
+$(document).on("click", "#results", getCars);
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
-
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
-
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
-
-      $li.append($button);
-
-      return $li;
-    });
-
-    $exampleList.empty();
-    $exampleList.append($examples);
+function showResults(carsResult) {
+  carsResult.forEach(function(element) {
+    console.log(element);
   });
-};
+}
 
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
+// This function grabs cars from the database and updates the view
+
+function getCars() {
+  $.get("/api/cars", function(data) {
+    cars = data;
+    showResults(cars);
+  });
+}
+
+// This function deletes a todo when the user clicks the delete button
+// function deleteCar(event) {
+//   event.stopPropagation();
+//   var id = $(this).data("id");
+//   $.ajax({
+//     method: "DELETE",
+//     url: "/api/cars/" + id
+//   }).then(getCars);
+//}
+
+// This function updates a todo in our database
+// function updateCar(todo) {
+//   $.ajax({
+//     method: "PUT",
+//     url: "/api/cars",
+//     data: cars
+//   }).then(getCars);
+// }
+function fairCondition(carYear) {
+  if (carYear > 2000 && carYear < 2004) {
+    offer = Math.floor(Math.random() * (1500 - 900 + 1)) + 900;
+    console.log(offer);
+  } else if (carYear > 2004 && carYear < 2009) {
+    offer = Math.floor(Math.random() * (2000 - 1500 + 1)) + 1500;
+    console.log(offer);
+  } else if (carYear > 2009 && carYear < 2015) {
+    offer = Math.floor(Math.random() * (2300 - 2000 + 1)) + 2000;
+    console.log(offer);
+  } else if (carYear >= 2015) {
+    offer = Math.floor(Math.random() * (2800 - 2300 + 1)) + 2300;
+    console.log(offer);
+  }
+}
+
+function goodCondition(carYear) {
+  if (carYear > 2000 && carYear < 2004) {
+    offer = Math.floor(Math.random() * (3200 - 2800 + 1)) + 2800;
+  } else if (carYear > 2004 && carYear < 2009) {
+    offer = Math.floor(Math.random() * (3600 - 3200 + 1)) + 3200;
+  } else if (carYear > 2009 && carYear < 2015) {
+    offer = Math.floor(Math.random() * (4000 - 3600 + 1)) + 3600;
+  } else if (carYear >= 2015) {
+    offer = Math.floor(Math.random() * (4400 - 4000 + 1)) + 4000;
+  }
+}
+
+function excellentCondition(carYear) {
+  if (carYear > 2000 && carYear < 2004) {
+    offer = Math.floor(Math.random() * (4600 - 4400 + 1)) + 4400;
+  } else if (carYear > 2004 && carYear < 2009) {
+    offer = Math.floor(Math.random() * (5000 - 4600 + 1)) + 4600;
+  } else if (carYear > 2009 && carYear < 2015) {
+    offer = Math.floor(Math.random() * (5400 - 5000 + 1)) + 5000;
+  } else if (carYear >= 2015) {
+    offer = Math.floor(Math.random() * (7000 - 5400 + 1)) + 5400;
+  }
+}
+
+function checkCondition(condition){
+  var year = $year.val();
+  switch (condition) {
+    case "fair":
+      console.log("fair");
+      fairCondition(year);
+      return;
+    case "good":
+      console.log("good");
+      goodCondition(year);
+      return;
+    case "excellent":
+      console.log("excellent");
+      excellentCondition(year);
+      return;
+  }
+}
+function buyCar(event) {
   event.preventDefault();
-
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
+  var condition = $condition.val();
+  checkCondition(condition);
+  var cars = {
+    make: $make.val(),
+    model: $model.val(),
+    year: $year.val(),
+    miles: $miles.val(),
+    condition: $condition.val(),
+    offer: offer
   };
 
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
-  }
-
-  API.saveExample(example).then(function() {
-    refreshExamples();
-  });
-
-  $exampleText.val("");
-  $exampleDescription.val("");
-};
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
-  });
-};
-
-// Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+  console.log(offer);
+  $.post("/api/cars", cars);
+  // location.reload();
+}
