@@ -9,7 +9,7 @@ $(document).on("submit", "#sellForm", buyCar);
 $(document).on("click", "#results", getCars);
 
 function showResults(carsResult) {
-  carsResult.forEach(function(element) {
+  carsResult.forEach(function (element) {
     console.log(element);
   });
 }
@@ -17,7 +17,7 @@ function showResults(carsResult) {
 // This function grabs cars from the database and updates the view
 
 function getCars() {
-  $.get("/api/cars", function(data) {
+  $.get("/api/cars/" + $make.val() + "/" + $condition.val(), function (data) {
     cars = data;
     showResults(cars);
   });
@@ -81,7 +81,7 @@ function excellentCondition(carYear) {
   }
 }
 
-function checkCondition(condition){
+function checkCondition(condition) {
   var year = $year.val();
   switch (condition) {
     case "fair":
