@@ -1,7 +1,9 @@
+//assign variable to email input and set the on click events.
 var $email = $("#email");
 $(document).on("submit", "#subscribe", subscribe);
 $(document).on("click", "#clear", clear);
 
+//Pushes email to DB and also validates the customer input.
 function subscribe(event) {
     event.preventDefault();
     if ($email.val() === "") {
