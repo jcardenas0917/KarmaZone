@@ -23,7 +23,7 @@ function showOfferModal(offer){
   $('#showOffer').modal({
     show: true,
 });
-  $('#offer').text("Our offer for your vehicle is $" + offer + " 🚗");
+  $('#offer').text("Our offer for your vehicle is $" + offer);
 }
 //Shows inventory search to buy cars
 function showResults(carsResult) {
