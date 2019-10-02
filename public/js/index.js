@@ -178,7 +178,8 @@ function acceptOffer(event){
     offer: offer
   };
   $.post("/api/cars", cars);
-  $("#offer").text("Congratulation this offer is valid for 15 days")
+  var confirmation = Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1000;
+  $("#offer").text("Congratulation your confirmation number is "+ confirmation)
   $(".accept").hide();
 }
 //Deletes the car from the Database after clicking on buy
