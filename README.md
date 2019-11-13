@@ -33,8 +33,7 @@ npm i
 
 Primary goal of the product: The primary goal of this app is to help dealer owners and customer have a great experience when buying or selling vehicles.  Although there are still lots of features that can be added, this version is a great start for a very escalable application.
 
-## Challenges
-Authentication was one of the biggest challenge on this app.  The app is still groing and will keep adding feautures and fixing bugs as they appear.
+
 
 ## APP
 [KarmaZone(https://guarded-fjord-14593.herokuapp.com/)
